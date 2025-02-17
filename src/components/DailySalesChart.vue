@@ -35,67 +35,79 @@ export default defineComponent({
     });
 
     const chartOptions = computed(() => ({
-      chart: {
-        type: 'column',
-        backgroundColor: 'white'
-      },
-      title: {
-        text: 'Daily Sales',
-        align: 'left'
-      },
-      xAxis: {
-        categories: formattedDates.value,
-        labels: {
-          rotation: -45
-        }
-      },
-      yAxis: {
-        min: 0,
-        title: {
-          text: 'Amount ($)'
-        },
-        stackLabels: {
-          enabled: true
-        }
-      },
-      tooltip: {
-        headerFormat: '<b>{point.x}</b><br/>',
-        pointFormat: '{series.name}: ${point.y}<br/>Total: ${point.stackTotal}'
-      },
-      plotOptions: {
-        column: {
-          stacking: 'normal',
-          dataLabels: {
-            enabled: true,
-            format: '${y}'
-          }
-        }
-      },
-      series: [
-        {
-          name: 'Profit',
-          data: props.chartData.map(item => item.profit || 0),
-          color: '#00C49F'
-        },
-        {
-          name: 'FBA Sales',
-          data: props.chartData.map(item => item.fbaAmount || 0),
-          color: '#8884d8'
-        },
-        {
-          name: 'FBM Sales',
-          data: props.chartData.map(item => item.fbmAmount || 0),
-          color: '#483D8B'
-        }
-      ],
-      legend: {
-        enabled: true, // Keep legend visible
-        align: 'center', // Align in the center
-        verticalAlign: 'bottom', // Move it to the bottom
-        layout: 'horizontal' // Keep it in a single row
+  chart: {
+    type: 'column',
+    backgroundColor: 'white'
+  },
+  title: {
+    text: 'Daily Sales',
+    align: 'left'
+  },
+  xAxis: {
+    categories: formattedDates.value,
+    labels: {
+      rotation: -45
+    }
+  },
+  yAxis: {
+    min: 0,
+    title: {
+      text: 'Amount ($)'
     },
+    stackLabels: {
+      enabled: true
+    }
+  },
+  legend: {
+    enabled: true,
+    align: 'center',
+    verticalAlign: 'bottom',
+    layout: 'horizontal'
+  },
+  tooltip: {
+    shared: true,
+    useHTML: true,
+    headerFormat: '<b>{point.x}</b><br/>',
+    pointFormatter: function (): string {
+      const index = (this as any).index;
+      const data = props.chartData[index];
 
-    }));
+      return `
+        <b>Total Sales:</b> $${(data.fbaAmount + data.fbmAmount).toFixed(2)}<br/>
+        <b>Shipping:</b> $${data.fbaShippingAmount.toFixed(2)}<br/>
+        <b>Profit:</b> $${data.profit.toFixed(2)}<br/>
+        <b>FBA Sales:</b> $${data.fbaAmount.toFixed(2)}<br/>
+        <b>FBM Sales:</b> $${data.fbmAmount.toFixed(2)}
+      `;
+    }
+  },
+  plotOptions: {
+    column: {
+      stacking: 'normal',
+      dataLabels: {
+        enabled: true,
+        format: '${y}'
+      }
+    }
+  },
+  series: [
+    {
+      name: 'Profit',
+      data: props.chartData.map(item => item.profit || 0),
+      color: '#00C49F'
+    },
+    {
+      name: 'FBA Sales',
+      data: props.chartData.map(item => item.fbaAmount || 0),
+      color: '#8884d8'
+    },
+    {
+      name: 'FBM Sales',
+      data: props.chartData.map(item => item.fbmAmount || 0),
+      color: '#4B0082'
+    }
+  ]
+}));
 
     return {
       chartOptions
