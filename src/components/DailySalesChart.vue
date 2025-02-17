@@ -26,11 +26,15 @@ export default defineComponent({
     }, { immediate: true })
 
     const formattedDates = computed(() => {
-      return props.chartData.map(item => new Date(item.date).toLocaleDateString('en-US', { 
-        weekday: 'short',
-        month: 'short', 
-        day: 'numeric' 
-      }));
+      return props.chartData.map(item => {
+        const date = new Date(item.date);
+        return date.toLocaleDateString('en-US', { 
+          weekday: 'long',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }).replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
+      });
     });
 
     const chartOptions = computed(() => ({
