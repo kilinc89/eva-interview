@@ -15,7 +15,13 @@
               backgroundColor: '#2196f3'
             }"
           >
-            <span class="tooltip">FBA: ${{ formatNumber(item.fbaAmount) }}</span>
+          <ChartTooltip
+              :date="item.date"
+              :fba-amount="item.fbaAmount"
+              :fbm-amount="item.fbmAmount"
+              :shipping-amount="item.fbaShippingAmount + item.fbmShippingAmount"
+              :profit="item.profit"
+            />
           </div>
           <!-- FBM Sales Bar -->
           <div 
@@ -25,7 +31,29 @@
               backgroundColor: '#9c27b0'
             }"
           >
-            <span class="tooltip">FBM: ${{ formatNumber(item.fbmAmount) }}</span>
+            <div class="tooltip">
+              <div class="tooltip-title">{{ formatDate(item.date) }}</div>
+              <div class="tooltip-row">
+                <span>Total Sales:</span>
+                <span>${{ formatNumber(item.fbaAmount + item.fbmAmount) }}</span>
+              </div>
+              <div class="tooltip-row">
+                <span>FBA Sales:</span>
+                <span>${{ formatNumber(item.fbaAmount) }}</span>
+              </div>
+              <div class="tooltip-row">
+                <span>FBM Sales:</span>
+                <span>${{ formatNumber(item.fbmAmount) }}</span>
+              </div>
+              <div class="tooltip-row">
+                <span>Shipping:</span>
+                <span>${{ formatNumber(item.fbmShippingAmount) }}</span>
+              </div>
+              <div class="tooltip-row">
+                <span>Profit:</span>
+                <span>${{ formatNumber(item.profit) }}</span>
+              </div>
+            </div>
           </div>
           <!-- Profit Bar -->
           <div 
@@ -35,7 +63,29 @@
               backgroundColor: '#4caf50'
             }"
           >
-            <span class="tooltip">Profit: ${{ formatNumber(item.profit) }}</span>
+            <div class="tooltip">
+              <div class="tooltip-title">{{ formatDate(item.date) }}</div>
+              <div class="tooltip-row">
+                <span>Total Sales:</span>
+                <span>${{ formatNumber(item.fbaAmount + item.fbmAmount) }}</span>
+              </div>
+              <div class="tooltip-row">
+                <span>Shipping:</span>
+                <span>${{ formatNumber(item.fbaShippingAmount + item.fbmShippingAmount) }}</span>
+              </div>
+              <div class="tooltip-row">
+                <span>Profit:</span>
+                <span>${{ formatNumber(item.profit) }}</span>
+              </div>
+              <div class="tooltip-row">
+                <span>FBA Sales:</span>
+                <span>${{ formatNumber(item.fbaAmount) }}</span>
+              </div>
+              <div class="tooltip-row">
+                <span>FBM Sales:</span>
+                <span>${{ formatNumber(item.fbmAmount) }}</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="date">{{ formatDate(item.date) }}</div>
@@ -176,15 +226,36 @@ export default defineComponent({
 .tooltip {
   display: none;
   position: absolute;
-  top: -25px;
+  top: -120px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0,0,0,0.8);
+  background: rgba(0, 0, 0, 0.9);
   color: white;
-  padding: 4px 8px;
+  padding: 8px;
   border-radius: 4px;
   font-size: 12px;
   white-space: nowrap;
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.tooltip-title {
+  font-weight: bold;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+}
+
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.tooltip-row span:first-child {
+  margin-right: 12px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .date {

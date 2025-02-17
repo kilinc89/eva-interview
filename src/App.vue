@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import NotificationCard from './components/NotificationCard.vue'
+import NotificationCard from './screens/NotificationCard.vue'
 
 export default defineComponent({
   name: 'App',

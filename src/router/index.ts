@@ -33,8 +33,8 @@ export default router
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
-import LoginView from '../components/LoginView.vue'
-import DashboardView from '../components/DashboardView.vue'
+import LoginView from '../screens/LoginView.vue'
+import DashboardView from '../screens/DashboardView.vue'
 import store from '../store'
 
 const routes = [

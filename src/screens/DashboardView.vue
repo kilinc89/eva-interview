@@ -24,7 +24,7 @@
   <script lang="ts">
   import { defineComponent, ref, computed, onMounted } from 'vue'
   import { useStore } from 'vuex'
-  import DailySalesChart from './DailySalesChart.vue'
+  import DailySalesChart from '../components/DailySalesChart.vue'
   import SalesTable from './SalesTable.vue'
   
   export default defineComponent({
