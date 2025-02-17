@@ -2,6 +2,8 @@ export interface TableState {
   tableData: TableItem[]
   pageNumber: number
   selectedDates: string[]
+  totalItems: number
+  loading: boolean
 }
 
 export interface TableItem {

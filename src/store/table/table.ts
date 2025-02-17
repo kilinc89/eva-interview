@@ -11,7 +11,9 @@ import type {
 const state: TableState = {
   tableData: [],
   pageNumber: 1,
-  selectedDates: []
+  selectedDates: [],
+  totalItems: 0,
+  loading: false
 }
 
 const getters = {
@@ -28,6 +30,13 @@ const mutations = {
   },
   SET_SELECTED_DATES(state: TableState, dates: string[]): void {
     state.selectedDates = dates
+    console.log('Selected dates set:', dates)
+  },
+  SET_TOTAL_ITEMS(state: TableState, totalItems: number): void {
+    state.totalItems = totalItems
+  },
+  SET_LOADING(state: TableState, loading: boolean): void {
+    state.loading = loading
   }
 }
 
@@ -48,16 +57,16 @@ const actions = {
       }
     }
     commit('SET_SELECTED_DATES', newDates)
-    dispatch('fetchDailySalesSkuList')
   },
 
   async fetchDailySalesSkuList(
-    { commit, state, rootState }: { commit: any; state: TableState; rootState: RootState }
+    { commit, state, rootState }: { commit: any; state: TableState; rootState: RootState },
+    pageNumber: number
   ): Promise<void> {
     try {
-      const token = rootState.auth.accessToken
+      console.log('Fetching daily sales SKU list')
+      commit('SET_LOADING', true)
       const { storeId, marketplaceName } = rootState.user
-      const config = { headers: { Authorization: `Bearer ${token}` } }
       
       const isDaysCompare = state.selectedDates.length === 2 ? 1 : 0
       const salesDate = state.selectedDates[0] || ""
@@ -65,39 +74,37 @@ const actions = {
 
       const body: DailySalesRequest = {
         isDaysCompare,
-        marketplace: marketplaceName,
-        pageNumber: state.pageNumber,
+        marketplace: marketplaceName ?? '',
+        pageNumber,
         pageSize: 30,
         salesDate,
         salesDate2,
-        sellerId: storeId
+        sellerId: storeId ?? ''
       }
 
       const response = await axios.post<SkuListResponse>(
         'https://iapitest.eva.guru/data/daily-sales-sku-list',
-        body,
-        config
+        body
       )
-      const skuList = response.data?.skuList || []
 
-      const refundResponse = await axios.post<RefundRateResponse>(
-        'https://iapitest.eva.guru/data/get-sku-refund-rate',
-        { skuList },
-        config
-      )
-      const refundRates = refundResponse.data.data
+      if (response.data.skuList?.length) {
+        const refundResponse = await axios.post<RefundRateResponse>(
+          'https://iapitest.eva.guru/data/get-sku-refund-rate',
+          { skuList: response.data.skuList }
+        )
 
-      const combinedData = skuList.map((skuItem: TableItem) => {
-        const foundRefund = refundRates.find(r => r.sku === skuItem.sku)
-        return {
+        const combinedData = response.data.skuList.map(skuItem => ({
           ...skuItem,
-          refundRate: foundRefund ? foundRefund.refundRate : null
-        }
-      })
+          refundRate: refundResponse.data.data.find(r => r.sku === skuItem.sku)?.refundRate || 0
+        }))
 
-      commit('SET_TABLE_DATA', combinedData)
+        commit('SET_TABLE_DATA', combinedData)
+        commit('SET_TOTAL_ITEMS', response.data.totalItems)
+      }
     } catch (error) {
       console.error('Daily Sales SKU List error:', error)
+    } finally {
+      commit('SET_LOADING', false)
     }
   }
 }
