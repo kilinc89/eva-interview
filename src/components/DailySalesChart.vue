@@ -6,21 +6,6 @@
     </div>
     <highcharts class="hc" :options="chartOptions" ref="chart"></highcharts>
 
-
-    <div class="legend">
-      <div class="legend-item">
-        <div class="color-box profit"></div>
-        <span>Profit</span>
-      </div>
-      <div class="legend-item">
-        <div class="color-box fba"></div>
-        <span>FBA Sales</span>
-      </div>
-      <div class="legend-item">
-        <div class="color-box fbm"></div>
-        <span>FBM Sales</span>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -37,110 +22,82 @@ export default defineComponent({
   },
 
   setup(props) {
-    // Watch chartData for debugging
     watch(() => props.chartData, (newData) => {
       console.log('Chart data updated:', newData)
     }, { immediate: true })
 
-    const maxValue = computed(() => {
-      if (!props.chartData.length) return 0
-      return Math.max(...props.chartData.map(item => 
-        Math.max(
-          item.fbaAmount || 0, 
-          item.fbmAmount || 0, 
-          item.profit || 0
-        )
-      ))
-    })
+    const formattedDates = computed(() => {
+      return props.chartData.map(item => new Date(item.date).toLocaleDateString('en-US', { 
+        weekday: 'short',
+        month: 'short', 
+        day: 'numeric' 
+      }));
+    });
 
-    const calculateHeight = (value: number): number => {
-      if (!maxValue.value) return 0
-      return (value / maxValue.value) * 100
-    }
-
-    const formatDate = (dateStr: string) => {
-      try {
-        const date = new Date(dateStr)
-        return date.toLocaleDateString('en-US', { 
-          weekday: 'short',
-          month: 'short', 
-          day: 'numeric' 
-        })
-      } catch (e) {
-        return dateStr
-      }
-    }
-
-    const formatNumber = (num: number) => {
-      return num.toLocaleString('en-US', { 
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })
-    }
-
-
-    const chartOptions = {
+    const chartOptions = computed(() => ({
       chart: {
-        type: 'column'
+        type: 'column',
+        backgroundColor: 'white'
       },
       title: {
-          text: 'Major trophies for some English teams',
-          align: 'left'
+        text: 'Daily Sales',
+        align: 'left'
       },
       xAxis: {
-          categories: ['Arsenal', 'Chelsea', 'Liverpool', 'Manchester United']
+        categories: formattedDates.value,
+        labels: {
+          rotation: -45
+        }
       },
       yAxis: {
-          min: 0,
-          title: {
-              text: 'Count trophies'
-          },
-          stackLabels: {
-              enabled: true
-          }
-      },
-      legend: {
-          align: 'left',
-          x: 10,
-          verticalAlign: 'top',
-          y: 70,
-          floating: true,
-          backgroundColor:
-            'white',
-          borderColor: '#CCC',
-          borderWidth: 1,
-          shadow: false
+        min: 0,
+        title: {
+          text: 'Amount ($)'
+        },
+        stackLabels: {
+          enabled: true
+        }
       },
       tooltip: {
-          headerFormat: '<b>{category}</b><br/>',
-          pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        headerFormat: '<b>{point.x}</b><br/>',
+        pointFormat: '{series.name}: ${point.y}<br/>Total: ${point.stackTotal}'
       },
       plotOptions: {
-          column: {
-              stacking: 'normal',
-              dataLabels: {
-                  enabled: true
-              }
+        column: {
+          stacking: 'normal',
+          dataLabels: {
+            enabled: true,
+            format: '${y}'
           }
+        }
       },
-      series: [{
-          name: 'BPL',
-          data: [3, 5, 1, 13]
-      }, {
-          name: 'FA Cup',
-          data: [14, 8, 8, 12]
-      }, {
-          name: 'CL',
-          data: [0, 2, 6, 3]
-      }]
-     
-      }
+      series: [
+        {
+          name: 'Profit',
+          data: props.chartData.map(item => item.profit || 0),
+          color: '#00C49F'
+        },
+        {
+          name: 'FBA Sales',
+          data: props.chartData.map(item => item.fbaAmount || 0),
+          color: '#8884d8'
+        },
+        {
+          name: 'FBM Sales',
+          data: props.chartData.map(item => item.fbmAmount || 0),
+          color: '#483D8B'
+        }
+      ],
+      legend: {
+        enabled: true, // Keep legend visible
+        align: 'center', // Align in the center
+        verticalAlign: 'bottom', // Move it to the bottom
+        layout: 'horizontal' // Keep it in a single row
+    },
+
+    }));
 
     return {
-      maxValue,
-      calculateHeight,
-      formatDate,
-      formatNumber,
       chartOptions
     }
   }
@@ -160,84 +117,6 @@ export default defineComponent({
   text-align: center;
   padding: 40px;
   color: #666;
-}
-
-.chart {
-  display: flex;
-  align-items: flex-end;
-  height: 300px;
-  gap: 8px;
-  padding: 20px 0;
-  border-bottom: 1px solid #eee;
-  overflow-x: auto;
-}
-
-.bar-group {
-  flex: 0 0 40px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.bar-stack {
-  width: 30px;
-  height: 100%;
-  position: relative;
-}
-
-.bar {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  transition: height 0.3s ease;
-}
-
-.bar:hover .tooltip {
-  display: block;
-}
-
-.tooltip {
-  display: none;
-  position: absolute;
-  top: -120px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 1000;
-  min-width: 200px;
-}
-
-.tooltip-title {
-  font-weight: bold;
-  padding-bottom: 4px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  text-align: center;
-}
-
-.tooltip-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 2px 0;
-}
-
-.tooltip-row span:first-child {
-  margin-right: 12px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.date {
-  font-size: 11px;
-  margin-top: 8px;
-  transform: rotate(-45deg);
-  white-space: nowrap;
 }
 
 .legend {
@@ -261,15 +140,15 @@ export default defineComponent({
 }
 
 .color-box.profit {
-  background-color: #4caf50;
+  background-color: #00C49F;
 }
 
 .color-box.fba {
-  background-color: #2196f3;
+  background-color: #8884d8;
 }
 
 .color-box.fbm {
-  background-color: #9c27b0;
+  background-color: #483D8B;
 }
 
 h3 {
@@ -277,4 +156,3 @@ h3 {
   color: #333;
 }
 </style>
-  
