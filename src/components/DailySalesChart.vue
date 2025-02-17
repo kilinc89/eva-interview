@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch } from 'vue'
+import { defineComponent, computed } from 'vue'
 import type { ChartItem } from '../store/chart/types'
 import { useStore } from 'vuex'
 

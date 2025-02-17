@@ -18,7 +18,6 @@ export default defineComponent({
   props: {
     daySelection: Number
   },
-  emits: ['change'],
   setup(props) {
     const localDaySelection = ref(props.daySelection)
     const store = useStore()
