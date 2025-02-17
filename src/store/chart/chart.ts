@@ -11,7 +11,8 @@ const getters = {
 }
 
 const mutations = {
-  SET_CHART_DATA(state: ChartState, data: any[]): void {
+  SET_CHART_DATA(state: ChartState, data: ChartItem[]): void {
+    console.log('Setting chart data:', data)
     state.chartData = data
   }
 }
@@ -24,6 +25,8 @@ const actions = {
     try {
       const token = rootState.auth.accessToken
       const { storeId, marketplaceName } = rootState.user
+      
+      console.log('Fetching chart data with:', { storeId, marketplaceName, daySelection })
       
       const config = {
         headers: { Authorization: `Bearer ${token}` }
@@ -47,7 +50,14 @@ const actions = {
         body,
         config
       )
-      commit('SET_CHART_DATA', response.data.Data.item)
+
+      console.log('Chart API response:', response.data)
+      
+      if (response.data.ApiStatus) {
+        commit('SET_CHART_DATA', response.data.Data.item)
+      } else {
+        console.error('Chart API error:', response.data.ApiStatusMessage)
+      }
     } catch (error) {
       console.error('Daily Sales Overview error:', error)
     }

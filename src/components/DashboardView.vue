@@ -14,7 +14,7 @@
       </select>
   
       <!-- Grafiği ayrı bir bileşene alalım -->
-      <DailySalesChart :chartData="chartData.value"/>
+      <DailySalesChart :chartData="chartData" />
   
       <!-- Tablomuz -->
       <SalesTable />
@@ -38,15 +38,17 @@
       const marketplaceName = computed(() => store.state.user.marketplaceName)
       const chartData = computed(() => store.state.chart.chartData)
 
-      console.log('chartData', chartData)
-
       const onDayChange = () => {
-        store.dispatch('chart/fetchDailySalesOverview', daySelection.value)
+        store.dispatch('chart/fetchDailySalesOverview', Number(daySelection.value))
       }
 
       onMounted(async () => {
-        await store.dispatch('user/fetchUserInfo')
-        store.dispatch('chart/fetchDailySalesOverview', daySelection.value)
+        try {
+          await store.dispatch('user/fetchUserInfo')
+          await store.dispatch('chart/fetchDailySalesOverview', Number(daySelection.value))
+        } catch (error) {
+          console.error('Dashboard mount error:', error)
+        }
       })
 
       return {
@@ -63,12 +65,24 @@
   <style scoped>
   .dashboard {
     padding: 20px;
+    background-color: #f5f5f5;
+    min-height: 100vh;
   }
 
   select {
     margin: 20px 0;
     padding: 8px;
     border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  p {
+    margin: 10px 0;
+    font-size: 16px;
   }
   </style>
   
