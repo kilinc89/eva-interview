@@ -17,7 +17,7 @@
       
       <!-- Grafiği ayrı bir bileşene alalım -->
       <DailySalesChart :chartData="chartData" />
-  
+      <SalesTable :selectedDates="selectedDates" />
   
     </div>
   </template>
@@ -26,10 +26,10 @@
   import { defineComponent, ref, computed, onMounted } from 'vue'
   import { useStore } from 'vuex'
   import DailySalesChart from '../components/DailySalesChart.vue'
-
+  import SalesTable from '../components/SalesTable.vue'
   
   export default defineComponent({
-    components: { DailySalesChart },
+    components: { DailySalesChart, SalesTable },
 
     setup() {
       const store = useStore()
@@ -38,6 +38,7 @@
       const storeId = computed(() => store.state.user.storeId)
       const marketplaceName = computed(() => store.state.user.marketplaceName)
       const chartData = computed(() => store.state.chart.chartData)
+      const selectedDates = computed(() => store.state.table.selectedDates)
 
       const onDayChange = () => {
         store.dispatch('chart/fetchDailySalesOverview', Number(daySelection.value))
@@ -57,6 +58,7 @@
         storeId,
         marketplaceName,
         chartData,
+        selectedDates,
         onDayChange
       }
     }

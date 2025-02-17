@@ -7,6 +7,7 @@ import type {
   SkuListResponse,
   RefundRateResponse 
 } from './types'
+import apiService from '../../services/apiService'
 
 const state: TableState = {
   tableData: [],
@@ -42,7 +43,7 @@ const mutations = {
 
 const actions = {
   addOrRemoveDate(
-    { commit, state, dispatch }: { commit: any; state: TableState; dispatch: any },
+    { commit, state }: { commit: any; state: TableState },
     date: string
   ): void {
     let newDates = [...state.selectedDates]
@@ -64,7 +65,6 @@ const actions = {
     pageNumber: number
   ): Promise<void> {
     try {
-      console.log('Fetching daily sales SKU list')
       commit('SET_LOADING', true)
       const { storeId, marketplaceName } = rootState.user
       
@@ -82,24 +82,24 @@ const actions = {
         sellerId: storeId ?? ''
       }
 
-      const response = await axios.post<SkuListResponse>(
-        'https://iapitest.eva.guru/data/daily-sales-sku-list',
+      const response = await apiService.post<SkuListResponse>(
+        '/data/daily-sales-sku-list',
         body
       )
 
-      if (response.data.skuList?.length) {
-        const refundResponse = await axios.post<RefundRateResponse>(
-          'https://iapitest.eva.guru/data/get-sku-refund-rate',
-          { skuList: response.data.skuList }
+      if (response.data.Data.item.skuList?.length) {
+        const refundResponse = await apiService.post<RefundRateResponse>(
+          'data/get-sku-refund-rate',
+          { skuList: response.data.Data.item.skuList }
         )
 
-        const combinedData = response.data.skuList.map(skuItem => ({
+        const combinedData = response.data.Data.item.skuList.map(skuItem => ({
           ...skuItem,
           refundRate: refundResponse.data.data.find(r => r.sku === skuItem.sku)?.refundRate || 0
         }))
 
         commit('SET_TABLE_DATA', combinedData)
-        commit('SET_TOTAL_ITEMS', response.data.totalItems)
+        commit('SET_TOTAL_ITEMS', response.data.Data.item.skuList.length)
       }
     } catch (error) {
       console.error('Daily Sales SKU List error:', error)

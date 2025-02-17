@@ -11,6 +11,7 @@
 <script lang="ts">
 import { defineComponent, computed, watch } from 'vue'
 import type { ChartItem } from '../store/chart/types'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   props: {
@@ -21,6 +22,8 @@ export default defineComponent({
   },
 
   setup(props) {
+    const store = useStore()
+
     watch(() => props.chartData, (newData) => {
       console.log('Chart data updated:', newData)
     }, { immediate: true })
@@ -92,6 +95,15 @@ export default defineComponent({
       dataLabels: {
         enabled: true,
         format: '${y}'
+      },
+      cursor: 'pointer',
+      point: {
+        events: {
+          click: function(this: { index: number }) {
+            const date = props.chartData[this.index].date
+            store.dispatch('table/addOrRemoveDate', date)
+          }
+        }
       }
     }
   },

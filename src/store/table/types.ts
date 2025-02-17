@@ -28,7 +28,18 @@ export interface DailySalesRequest {
 }
 
 export interface SkuListResponse {
-  skuList: TableItem[]
+  ApiStatus: boolean
+  ApiStatusCode: number
+  ApiStatusMessage: string
+  Data: {
+    item: {
+      selectedDate: string
+      totalSale: number
+      totalShippingAmount: number
+      skuList: TableItem[]
+    }
+    Currency: string
+  }
 }
 
 export interface RefundRateResponse {
