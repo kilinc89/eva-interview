@@ -70,17 +70,19 @@ export default defineComponent({
   tooltip: {
     shared: true,
     useHTML: true,
-    headerFormat: '<b>{point.x}</b><br/>',
+    headerFormat: '',
     pointFormatter: function (): string {
       const index = (this as any).index;
       const data = props.chartData[index];
 
       return `
-        <b>Total Sales:</b> $${(data.fbaAmount + data.fbmAmount).toFixed(2)}<br/>
-        <b>Shipping:</b> $${data.fbaShippingAmount.toFixed(2)}<br/>
-        <b>Profit:</b> $${data.profit.toFixed(2)}<br/>
-        <b>FBA Sales:</b> $${data.fbaAmount.toFixed(2)}<br/>
-        <b>FBM Sales:</b> $${data.fbmAmount.toFixed(2)}
+        <div style="padding: 8px;">
+          <b>Total Sales:</b> $${(data.fbaAmount + data.fbmAmount).toFixed(2)}<br/>
+          <b>Shipping:</b> $${data.fbaShippingAmount.toFixed(2)}<br/>
+          <b>Profit:</b> $${data.profit.toFixed(2)}<br/>
+          <b>FBA Sales:</b> $${data.fbaAmount.toFixed(2)}<br/>
+          <b>FBM Sales:</b> $${data.fbmAmount.toFixed(2)}
+        </div>
       `;
     }
   },
