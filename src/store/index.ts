@@ -6,15 +6,13 @@ import user from './user/user'
 import chart from './chart/chart'
 import table from './table/table'
 import notification from './notification/notification'
+import type { UserState } from './user/types'
 
 export interface RootState {
   auth: {
     accessToken: string | null
   }
-  user: {
-    storeId: string
-    marketplaceName: string
-  }
+  user: UserState,
   notification: {
     message: string
     type: 'success' | 'error' | 'warning' | 'info'

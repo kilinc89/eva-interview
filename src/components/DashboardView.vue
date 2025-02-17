@@ -14,7 +14,7 @@
       </select>
   
       <!-- Grafiği ayrı bir bileşene alalım -->
-      <DailySalesChart :chartData="chartData"/>
+      <DailySalesChart :chartData="chartData.value"/>
   
       <!-- Tablomuz -->
       <SalesTable />
@@ -37,6 +37,8 @@
       const storeId = computed(() => store.state.user.storeId)
       const marketplaceName = computed(() => store.state.user.marketplaceName)
       const chartData = computed(() => store.state.chart.chartData)
+
+      console.log('chartData', chartData)
 
       const onDayChange = () => {
         store.dispatch('chart/fetchDailySalesOverview', daySelection.value)

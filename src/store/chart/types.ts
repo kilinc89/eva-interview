@@ -1,5 +1,21 @@
 export interface ChartState {
-  chartData: any[] // Replace 'any' with specific chart data type if available
+  chartData: ChartItem[]
+}
+
+export interface ChartItem {
+  date: string
+  amount: number
+  orderCount: number
+  unitCount: number
+  avgSalesPrev30Days: number
+  prevYearDate: string
+  prevYearAmount: number
+  prevYearOrderCount: number
+  prevYearUnitCount: number
+  prevYearAvgSalesPrev30Days: number
+  profit: number
+  yoy30DailySalesGrowth: number
+  acos: number
 }
 
 export interface DailySalesRequest {
@@ -12,6 +28,12 @@ export interface DailySalesRequest {
 }
 
 export interface ChartResponse {
-  // API response type - adjust according to actual response
-  data: any[]
+  ApiStatus: boolean
+  ApiStatusCode: string
+  ApiStatusMessage: string
+  Data: {
+    Currency: string
+    item: ChartItem[]
+    isYoyExist: boolean
+  }
 } 

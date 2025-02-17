@@ -29,6 +29,10 @@ const actions = {
         headers: { Authorization: `Bearer ${token}` }
       }
 
+      if (!storeId || !marketplaceName) {
+        throw new Error('Store ID or Marketplace Name is not available')
+      }
+
       const body: DailySalesRequest = {
         customDateData: null,
         day: daySelection,
@@ -43,7 +47,7 @@ const actions = {
         body,
         config
       )
-      commit('SET_CHART_DATA', response.data)
+      commit('SET_CHART_DATA', response.data.Data.item)
     } catch (error) {
       console.error('Daily Sales Overview error:', error)
     }

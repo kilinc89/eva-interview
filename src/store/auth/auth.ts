@@ -32,6 +32,7 @@ const actions = {
   
       commit('SET_ACCESS_TOKEN', response.data.Data.AccessToken)
       
+      commit('user/SET_LOGIN_EMAIL', email, { root: true })
       return response.data.ApiStatus
     } catch (error) {
       console.error('Login error:', error)
