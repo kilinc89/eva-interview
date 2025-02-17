@@ -1,6 +1,6 @@
 import axios from 'axios'
 import type { RootState } from '../index'
-import type { ChartState, DailySalesRequest, ChartResponse } from './types'
+import type { ChartState, DailySalesRequest, ChartResponse, ChartItem } from './types'
 
 const state: ChartState = {
   chartData: []

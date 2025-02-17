@@ -11,11 +11,21 @@
           <div 
             class="bar fba" 
             :style="{
-              height: `${calculateHeight(item.amount)}%`,
+              height: `${calculateHeight(item.fbaAmount)}%`,
               backgroundColor: '#2196f3'
             }"
           >
-            <span class="tooltip">${{ formatNumber(item.amount) }}</span>
+            <span class="tooltip">FBA: ${{ formatNumber(item.fbaAmount) }}</span>
+          </div>
+          <!-- FBM Sales Bar -->
+          <div 
+            class="bar fbm" 
+            :style="{
+              height: `${calculateHeight(item.fbmAmount)}%`,
+              backgroundColor: '#9c27b0'
+            }"
+          >
+            <span class="tooltip">FBM: ${{ formatNumber(item.fbmAmount) }}</span>
           </div>
           <!-- Profit Bar -->
           <div 
@@ -25,7 +35,7 @@
               backgroundColor: '#4caf50'
             }"
           >
-            <span class="tooltip">${{ formatNumber(item.profit) }}</span>
+            <span class="tooltip">Profit: ${{ formatNumber(item.profit) }}</span>
           </div>
         </div>
         <div class="date">{{ formatDate(item.date) }}</div>
@@ -39,6 +49,10 @@
       <div class="legend-item">
         <div class="color-box fba"></div>
         <span>FBA Sales</span>
+      </div>
+      <div class="legend-item">
+        <div class="color-box fbm"></div>
+        <span>FBM Sales</span>
       </div>
     </div>
   </div>
@@ -64,7 +78,13 @@ export default defineComponent({
 
     const maxValue = computed(() => {
       if (!props.chartData.length) return 0
-      return Math.max(...props.chartData.map(item => Math.max(item.amount || 0, item.profit || 0)))
+      return Math.max(...props.chartData.map(item => 
+        Math.max(
+          item.fbaAmount || 0, 
+          item.fbmAmount || 0, 
+          item.profit || 0
+        )
+      ))
     })
 
     const calculateHeight = (value: number): number => {
@@ -200,6 +220,10 @@ export default defineComponent({
 
 .color-box.fba {
   background-color: #2196f3;
+}
+
+.color-box.fbm {
+  background-color: #9c27b0;
 }
 
 h3 {

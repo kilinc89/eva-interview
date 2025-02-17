@@ -5,17 +5,40 @@ export interface ChartState {
 export interface ChartItem {
   date: string
   amount: number
+  fbaAmount: number
+  fbmAmount: number
   orderCount: number
+  fbaOrderCount: number
+  fbmOrderCount: number
   unitCount: number
+  fbaUnitCount: number
+  fbmUnitCount: number
   avgSalesPrev30Days: number
-  prevYearDate: string
+  prevYearDate: number
   prevYearAmount: number
+  prevYearFbaAmount: number
+  prevYearFbmAmount: number
+  prevYearShippingAmount: number
+  prevYearFbaShippingAmount: number
+  prevYearFbmShippingAmount: number
   prevYearOrderCount: number
   prevYearUnitCount: number
+  yoy30DailySalesGrowth: number
   prevYearAvgSalesPrev30Days: number
   profit: number
-  yoy30DailySalesGrowth: number
+  cogs: number
+  amazonExpense: number
+  totalExpense: number
+  shippingAmount: number
+  fbaShippingAmount: number
+  fbmShippingAmount: number
+  avgProfitPrev30Days: number
+  avgAdvertisingCostPrev30Days: number
+  advertisingCost: number
   acos: number
+  refundTotalAmount: number
+  totalVatAmount: number
+  otherFee: number
 }
 
 export interface DailySalesRequest {
@@ -32,8 +55,6 @@ export interface ChartResponse {
   ApiStatusCode: string
   ApiStatusMessage: string
   Data: {
-    Currency: string
     item: ChartItem[]
-    isYoyExist: boolean
   }
 } 
