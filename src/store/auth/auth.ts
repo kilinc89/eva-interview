@@ -3,7 +3,8 @@ import apiService from '../../services/apiService'
 import type { AuthState, LoginPayload, LoginResponse } from './types'
 
 const state: AuthState = {
-  accessToken: null
+  accessToken: null,
+  refreshToken: null
 }
 
 const getters = {
@@ -13,6 +14,9 @@ const getters = {
 const mutations = {
   SET_ACCESS_TOKEN(state: AuthState, token: string): void {
         state.accessToken = token
+  },
+  SET_REFRESH_TOKEN(state: AuthState, token: string): void {
+    state.refreshToken = token
   }
 }
 
@@ -31,6 +35,7 @@ const actions = {
       const response = await apiService.post<LoginResponse>('/oauth/token', payload)
   
       commit('SET_ACCESS_TOKEN', response.data.Data.AccessToken)
+      commit('SET_REFRESH_TOKEN', response.data.Data.RefreshToken)
       
       commit('user/SET_LOGIN_EMAIL', email, { root: true })
       return response.data.ApiStatus

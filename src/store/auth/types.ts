@@ -1,5 +1,6 @@
 interface AuthState {
     accessToken: string | null
+    refreshToken: string | null
   }
   
   interface LoginPayload {
