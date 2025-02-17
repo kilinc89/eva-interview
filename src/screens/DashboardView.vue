@@ -18,8 +18,7 @@
       <!-- Grafiği ayrı bir bileşene alalım -->
       <DailySalesChart :chartData="chartData" />
   
-      <!-- Tablomuz -->
-      <SalesTable />
+  
     </div>
   </template>
   
@@ -27,10 +26,10 @@
   import { defineComponent, ref, computed, onMounted } from 'vue'
   import { useStore } from 'vuex'
   import DailySalesChart from '../components/DailySalesChart.vue'
-  import SalesTable from './SalesTable.vue'
+
   
   export default defineComponent({
-    components: { DailySalesChart, SalesTable },
+    components: { DailySalesChart },
 
     setup() {
       const store = useStore()
