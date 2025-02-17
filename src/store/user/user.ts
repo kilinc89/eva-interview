@@ -1,4 +1,4 @@
-import axios from 'axios'
+import apiService from '../../services/apiService'
 import type { RootState } from '../index'
 import type { UserState, UserInfo, UserInfoResponse } from './types'
 
@@ -29,17 +29,9 @@ const actions = {
     { commit, rootState }: { commit: any; rootState: RootState }
   ): Promise<void> {
     try {
-      const token = rootState.auth.accessToken
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-
-      const response = await axios.post<UserInfoResponse>(
-        'https://iapitest.eva.guru/user/user-information',
-        { email: rootState.user.loginEmail },
-        config
+      const response = await apiService.post<UserInfoResponse>(
+        '/user/user-information',
+        { email: rootState.user.loginEmail }
       )
 
       commit('SET_USER_INFO', {

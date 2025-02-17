@@ -1,5 +1,5 @@
 // src/store/auth.js
-import axios from 'axios'
+import apiService from '../../services/apiService'
 import type { AuthState, LoginPayload, LoginResponse } from './types'
 
 const state: AuthState = {
@@ -28,7 +28,7 @@ const actions = {
         ClientSecret: "SECRET0001",
         RedirectUri: "https://api.eva.guru"
       }
-      const response = await axios.post<LoginResponse>('https://iapitest.eva.guru/oauth/token', payload)
+      const response = await apiService.post<LoginResponse>('/oauth/token', payload)
   
       commit('SET_ACCESS_TOKEN', response.data.Data.AccessToken)
       

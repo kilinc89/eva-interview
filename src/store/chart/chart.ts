@@ -1,4 +1,4 @@
-import axios from 'axios'
+import apiService from '../../services/apiService'
 import type { RootState } from '../index'
 import type { ChartState, DailySalesRequest, ChartResponse, ChartItem } from './types'
 
@@ -23,14 +23,9 @@ const actions = {
     daySelection: number
   ): Promise<void> {
     try {
-      const token = rootState.auth.accessToken
+  
       const { storeId, marketplaceName } = rootState.user
-      
-      console.log('Fetching chart data with:', { storeId, marketplaceName, daySelection })
-      
-      const config = {
-        headers: { Authorization: `Bearer ${token}` }
-      }
+  
 
       if (!storeId || !marketplaceName) {
         throw new Error('Store ID or Marketplace Name is not available')
@@ -45,10 +40,9 @@ const actions = {
         sellerId: storeId
       }
 
-      const response = await axios.post<ChartResponse>(
-        'https://iapitest.eva.guru/data/daily-sales-overview',
+      const response = await apiService.post<ChartResponse>(
+        '/data/daily-sales-overview',
         body,
-        config
       )
 
       console.log('Chart API response:', response.data)
