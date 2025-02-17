@@ -24,10 +24,6 @@ export default defineComponent({
   setup(props) {
     const store = useStore()
 
-    watch(() => props.chartData, (newData) => {
-      console.log('Chart data updated:', newData)
-    }, { immediate: true })
-
     const formattedDates = computed(() => {
       return props.chartData.map(item => {
         const date = new Date(item.date);

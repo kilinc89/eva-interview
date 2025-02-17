@@ -1,7 +1,7 @@
 <template>
     <div class="dashboard">
       <UserInfo :storeId="storeId" :marketplaceName="marketplaceName" />
-      <Header :daySelection="daySelection" @change="onDayChange" />
+      <Header :daySelection="daySelection"  />
       <DailySalesChart :chartData="chartData" />
       <SalesTable :selectedDates="selectedDates" />
     </div>
@@ -27,10 +27,7 @@
       const chartData = computed(() => store.state.chart.chartData)
       const selectedDates = computed(() => store.state.table.selectedDates)
 
-      const onDayChange = () => {
-        store.dispatch('chart/fetchDailySalesOverview', Number(daySelection.value))
-      }
-
+   
       onMounted(async () => {
         try {
           await store.dispatch('user/fetchUserInfo')
@@ -46,7 +43,6 @@
         marketplaceName,
         chartData,
         selectedDates,
-        onDayChange
       }
     }
   })

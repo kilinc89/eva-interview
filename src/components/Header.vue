@@ -11,22 +11,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
-
+import { defineComponent, ref } from 'vue'
+import { useStore } from 'vuex'
+  
 export default defineComponent({
   props: {
     daySelection: Number
   },
   emits: ['change'],
-  setup(props, { emit }) {
+  setup(props) {
     const localDaySelection = ref(props.daySelection)
+    const store = useStore()
 
-    watch(localDaySelection, (newVal) => {
-      emit('change', newVal)
-    })
+    const emitChange = () => {
+      store.dispatch('chart/fetchDailySalesOverview',localDaySelection.value)
+    }
 
+ 
     return {
-      localDaySelection
+      localDaySelection,
+      emitChange
     }
   }
 })
