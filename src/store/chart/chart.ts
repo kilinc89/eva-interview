@@ -45,7 +45,6 @@ const actions = {
         body,
       )
 
-      console.log('Chart API response:', response.data)
       
       if (response.data.ApiStatus) {
         commit('SET_CHART_DATA', response.data.Data.item)

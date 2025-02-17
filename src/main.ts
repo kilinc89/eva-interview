@@ -4,10 +4,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './assets/main.css'
+import HighchartsVue from "highcharts-vue";
 
 const app = createApp(App)
 
 app.use(store)
 app.use(router)
-
+app.use(HighchartsVue)
 app.mount('#app')

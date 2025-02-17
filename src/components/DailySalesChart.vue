@@ -4,93 +4,9 @@
     <div v-if="!chartData.length" class="loading">
       Loading chart data...
     </div>
-    <div v-else class="chart">
-      <div v-for="item in chartData" :key="item.date" class="bar-group">
-        <div class="bar-stack">
-          <!-- FBA Sales Bar -->
-          <div 
-            class="bar fba" 
-            :style="{
-              height: `${calculateHeight(item.fbaAmount)}%`,
-              backgroundColor: '#2196f3'
-            }"
-          >
-          <ChartTooltip
-              :date="item.date"
-              :fba-amount="item.fbaAmount"
-              :fbm-amount="item.fbmAmount"
-              :shipping-amount="item.fbaShippingAmount + item.fbmShippingAmount"
-              :profit="item.profit"
-            />
-          </div>
-          <!-- FBM Sales Bar -->
-          <div 
-            class="bar fbm" 
-            :style="{
-              height: `${calculateHeight(item.fbmAmount)}%`,
-              backgroundColor: '#9c27b0'
-            }"
-          >
-            <div class="tooltip">
-              <div class="tooltip-title">{{ formatDate(item.date) }}</div>
-              <div class="tooltip-row">
-                <span>Total Sales:</span>
-                <span>${{ formatNumber(item.fbaAmount + item.fbmAmount) }}</span>
-              </div>
-              <div class="tooltip-row">
-                <span>FBA Sales:</span>
-                <span>${{ formatNumber(item.fbaAmount) }}</span>
-              </div>
-              <div class="tooltip-row">
-                <span>FBM Sales:</span>
-                <span>${{ formatNumber(item.fbmAmount) }}</span>
-              </div>
-              <div class="tooltip-row">
-                <span>Shipping:</span>
-                <span>${{ formatNumber(item.fbmShippingAmount) }}</span>
-              </div>
-              <div class="tooltip-row">
-                <span>Profit:</span>
-                <span>${{ formatNumber(item.profit) }}</span>
-              </div>
-            </div>
-          </div>
-          <!-- Profit Bar -->
-          <div 
-            class="bar profit" 
-            :style="{
-              height: `${calculateHeight(item.profit)}%`,
-              backgroundColor: '#4caf50'
-            }"
-          >
-            <div class="tooltip">
-              <div class="tooltip-title">{{ formatDate(item.date) }}</div>
-              <div class="tooltip-row">
-                <span>Total Sales:</span>
-                <span>${{ formatNumber(item.fbaAmount + item.fbmAmount) }}</span>
-              </div>
-              <div class="tooltip-row">
-                <span>Shipping:</span>
-                <span>${{ formatNumber(item.fbaShippingAmount + item.fbmShippingAmount) }}</span>
-              </div>
-              <div class="tooltip-row">
-                <span>Profit:</span>
-                <span>${{ formatNumber(item.profit) }}</span>
-              </div>
-              <div class="tooltip-row">
-                <span>FBA Sales:</span>
-                <span>${{ formatNumber(item.fbaAmount) }}</span>
-              </div>
-              <div class="tooltip-row">
-                <span>FBM Sales:</span>
-                <span>${{ formatNumber(item.fbmAmount) }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="date">{{ formatDate(item.date) }}</div>
-      </div>
-    </div>
+    <highcharts class="hc" :options="chartOptions" ref="chart"></highcharts>
+
+
     <div class="legend">
       <div class="legend-item">
         <div class="color-box profit"></div>
@@ -162,11 +78,70 @@ export default defineComponent({
       })
     }
 
+
+    const chartOptions = {
+      chart: {
+        type: 'column'
+      },
+      title: {
+          text: 'Major trophies for some English teams',
+          align: 'left'
+      },
+      xAxis: {
+          categories: ['Arsenal', 'Chelsea', 'Liverpool', 'Manchester United']
+      },
+      yAxis: {
+          min: 0,
+          title: {
+              text: 'Count trophies'
+          },
+          stackLabels: {
+              enabled: true
+          }
+      },
+      legend: {
+          align: 'left',
+          x: 10,
+          verticalAlign: 'top',
+          y: 70,
+          floating: true,
+          backgroundColor:
+            'white',
+          borderColor: '#CCC',
+          borderWidth: 1,
+          shadow: false
+      },
+      tooltip: {
+          headerFormat: '<b>{category}</b><br/>',
+          pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+      },
+      plotOptions: {
+          column: {
+              stacking: 'normal',
+              dataLabels: {
+                  enabled: true
+              }
+          }
+      },
+      series: [{
+          name: 'BPL',
+          data: [3, 5, 1, 13]
+      }, {
+          name: 'FA Cup',
+          data: [14, 8, 8, 12]
+      }, {
+          name: 'CL',
+          data: [0, 2, 6, 3]
+      }]
+     
+      }
+
     return {
       maxValue,
       calculateHeight,
       formatDate,
-      formatNumber
+      formatNumber,
+      chartOptions
     }
   }
 })
