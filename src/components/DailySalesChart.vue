@@ -37,96 +37,95 @@ export default defineComponent({
     });
 
     const chartOptions = computed(() => ({
-  chart: {
-    type: 'column',
-    backgroundColor: 'white'
-  },
-  title: {
-    text: 'Daily Sales',
-    align: 'left'
-  },
-  xAxis: {
-    categories: formattedDates.value,
-    labels: {
-      rotation: -45
-    }
-  },
-  yAxis: {
-    min: 0,
-    title: {
-      text: 'Amount ($)'
-    },
-    stackLabels: {
-      enabled: true
-    }
-  },
-  legend: {
-    enabled: true,
-    align: 'center',
-    verticalAlign: 'bottom',
-    layout: 'horizontal'
-  },
-  tooltip: {
-    shared: true,
-    useHTML: true,
-    headerFormat: '',
-    pointFormatter: function (): string {
-      const index = (this as any).index;
-      const data = props.chartData[index];
-
-      return `
-        <div style="padding: 8px;">
-          <b>Total Sales:</b> $${(data.fbaAmount + data.fbmAmount).toFixed(2)}<br/>
-          <b>Shipping:</b> $${data.fbaShippingAmount.toFixed(2)}<br/>
-          <b>Profit:</b> $${data.profit.toFixed(2)}<br/>
-          <b>FBA Sales:</b> $${data.fbaAmount.toFixed(2)}<br/>
-          <b>FBM Sales:</b> $${data.fbmAmount.toFixed(2)}
-        </div>
-      `;
-    }
-  },
-  plotOptions: {
-    column: {
-      stacking: 'normal',
-      dataLabels: {
-        enabled: true,
-        format: '${y}'
+      chart: {
+        type: 'column',
+        backgroundColor: 'white'
       },
-      cursor: 'pointer',
-      point: {
-        events: {
-          click: function(this: { index: number }) {
-            const date = props.chartData[this.index].date
-            store.dispatch('table/addOrRemoveDate', date)
+      title: {
+        text: 'Daily Sales',
+        align: 'left'
+      },
+      xAxis: {
+        categories: formattedDates.value,
+        labels: {
+          rotation: -45
+        }
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: 'Amount ($)'
+        },
+        stackLabels: {
+          enabled: true
+        }
+      },
+      legend: {
+        enabled: true,
+        align: 'center',
+        verticalAlign: 'bottom',
+        layout: 'horizontal'
+      },
+      tooltip: {
+        shared: true,
+        useHTML: true,
+        headerFormat: '',
+        pointFormatter: function (): string {
+          const index = (this as any).index;
+          const data = props.chartData[index];
+
+          return `
+            <div style="padding: 8px;">
+              <b>Total Sales:</b> $${(data.fbaAmount + data.fbmAmount).toFixed(2)}<br/>
+              <b>Shipping:</b> $${data.fbaShippingAmount.toFixed(2)}<br/>
+              <b>Profit:</b> $${data.profit.toFixed(2)}<br/>
+              <b>FBA Sales:</b> $${data.fbaAmount.toFixed(2)}<br/>
+              <b>FBM Sales:</b> $${data.fbmAmount.toFixed(2)}
+            </div>
+          `;
+        }
+      },
+      plotOptions: {
+        column: {
+          stacking: 'normal',
+          dataLabels: {
+            enabled: true,
+            format: '${y}'
+          },
+          cursor: 'pointer',
+          point: {
+            events: {
+              click: function(this: { index: number }) {
+                const date = props.chartData[this.index].date
+                store.dispatch('table/addOrRemoveDate', date)
+              }
+            }
           }
         }
-      }
-    }
-  },
-  series: [
-    {
-      name: 'Profit',
-      data: props.chartData.map(item => item.profit || 0),
-      color: '#00C49F'
-    },
-    {
-      name: 'FBA Sales',
-      data: props.chartData.map(item => item.fbaAmount || 0),
-      color: '#8884d8'
-    },
-    {
-      name: 'FBM Sales',
-      data: props.chartData.map(item => item.fbmAmount || 0),
-      color: '#4B0082'
-    }
-  ]
-}));
+      },
+      series: [
+        {
+          name: 'Profit',
+          data: props.chartData.map(item => item.profit ?? 0),
+          color: '#00C49F'
+        },
+        {
+          name: 'FBA Sales',
+          data: props.chartData.map(item => item.fbaAmount ?? 0) 
+        },
+        {
+          name: 'FBM Sales',
+          data: props.chartData.map(item => item.fbmAmount ?? 0),
+          color: '#4B0082'
+        }
+      ]
+    }));
 
-    return {
-      chartOptions
-    }
-  }
-})
+        return {
+          chartOptions
+        }
+      }
+    })
 </script>
 
 <style scoped>
