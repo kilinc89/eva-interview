@@ -1,18 +1,20 @@
 <template>
     <div class="dashboard">
-      <h2>Dashboard</h2>
-      <!-- Kullanıcı bilgisi -->
       <p>Store ID: {{ storeId }}</p>
       <p>Marketplace: {{ marketplaceName }}</p>
+      <div class="header">
+        <h2>Dashboard</h2>
+        <select v-model="daySelection" @change="onDayChange" class="day-select">
+          <option value="60">Last 60 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="14">Last 14 days</option>
+          <option value="7">Last 7 days</option>
+        </select>
+      </div>
       
-      <!-- Gün seçimi (7,14,30,60) -->
-      <select v-model="daySelection" @change="onDayChange">
-        <option value="60">Last 60 days</option>
-        <option value="30">Last 30 days</option>
-        <option value="14">Last 14 days</option>
-        <option value="7">Last 7 days</option>
-      </select>
+      <!-- Kullanıcı bilgisi -->
   
+      
       <!-- Grafiği ayrı bir bileşene alalım -->
       <DailySalesChart :chartData="chartData" />
   
@@ -69,15 +71,25 @@
     min-height: 100vh;
   }
 
-  select {
-    margin: 20px 0;
-    padding: 8px;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .day-select {
+    padding: 8px 12px;
     border-radius: 4px;
     border: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
+    min-width: 150px;
   }
 
   h2 {
-    margin-bottom: 20px;
+    margin: 0;
+    color: #333;
   }
 
   p {

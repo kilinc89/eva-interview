@@ -1,6 +1,5 @@
 <template>
   <div class="chart-container">
-    <h3>Daily Sales</h3>
     <div v-if="!chartData.length" class="loading">
       Loading chart data...
     </div>
