@@ -69,8 +69,8 @@ export default defineComponent({
         shared: true,
         useHTML: true,
         headerFormat: '',
-        pointFormatter: function (): string {
-          const index = (this as any).index;
+        formatter: function (): string {
+          const index = (this as any).points[0].point.index;
           const data = props.chartData[index];
 
           return `
@@ -89,7 +89,10 @@ export default defineComponent({
           stacking: 'normal',
           dataLabels: {
             enabled: true,
-            format: '${y}'
+            format: '${y}',
+            rotation: -90,
+            align: 'center',
+            verticalAlign: 'middle',
           },
           cursor: 'pointer',
           point: {
