@@ -1,4 +1,3 @@
-import axios from 'axios'
 import type { RootState } from '../index'
 import type { 
   TableState, 
@@ -23,7 +22,7 @@ const getters = {
 }
 
 const mutations = {
-  SET_TABLE_DATA(state: TableState, data: TableItem[]): void {
+  SET_TABLE_DATA(state: TableState, data: any[]): void {
     state.tableData = data
   },
   SET_PAGE_NUMBER(state: TableState, page: number): void {
@@ -31,7 +30,6 @@ const mutations = {
   },
   SET_SELECTED_DATES(state: TableState, dates: string[]): void {
     state.selectedDates = dates
-    console.log('Selected dates set:', dates)
   },
   SET_TOTAL_ITEMS(state: TableState, totalItems: number): void {
     state.totalItems = totalItems
@@ -89,14 +87,22 @@ const actions = {
 
       if (response.data.Data.item.skuList?.length) {
         const refundResponse = await apiService.post<RefundRateResponse>(
-          'data/get-sku-refund-rate',
-          { skuList: response.data.Data.item.skuList }
+          '/data/get-sku-refund-rate',
+          {
+            skuList: response.data.Data.item.skuList.map(item => item.sku),
+            marketplace: marketplaceName ?? '',
+            sellerId: storeId ?? '',
+            requestedDay: 0
+          }
         )
 
-        const combinedData = response.data.Data.item.skuList.map(skuItem => ({
-          ...skuItem,
-          refundRate: refundResponse.data.data.find(r => r.sku === skuItem.sku)?.refundRate || 0
-        }))
+        const combinedData = response.data.Data.item.skuList.map(skuItem => {
+          const refundData = refundResponse.data.Data.find(r => r.sku === skuItem.sku)
+          return {
+            ...skuItem,
+            refundRate: refundData ? refundData.refundRate : 0
+          }
+        })
 
         commit('SET_TABLE_DATA', combinedData)
         commit('SET_TOTAL_ITEMS', response.data.Data.item.skuList.length)

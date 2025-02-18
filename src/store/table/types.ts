@@ -43,5 +43,16 @@ export interface SkuListResponse {
 }
 
 export interface RefundRateResponse {
-  data: RefundRate[]
+  ApiStatus: boolean
+  ApiStatusCode: number
+  ApiStatusMessage: string
+  Data: RefundRateData[]
+}
+
+export interface RefundRateData {
+  sku: string
+  refundAmount: number
+  refundQuantity: number
+  refundRate: number
+  totalOrderCount: number
 } 
