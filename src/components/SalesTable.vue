@@ -1,49 +1,48 @@
 <template>
-  <div class="table-container" v-if="selectedDates.length > 0">
-    <div class="search-box">
-      <input type="text" v-model="searchQuery" placeholder="Search SKU or Product Name" />
-    </div>
-    <table>
+  <div class="mt-5 bg-white rounded-lg p-5 shadow-md" v-if="selectedDates.length > 0">
+  
+    <table class="w-full table-fixed border-collapse">
       <thead>
         <tr>
-          <th>SKU</th>
-          <th>Product Name</th>
-          <th v-if="selectedDates.length >= 1">
+          <th class="w-1/6 p-3 text-left bg-gray-100 font-semibold">SKU</th>
+          <th class="w-2/5 p-3 text-left bg-gray-100 font-semibold">Product Name</th>
+          <th v-if="selectedDates.length >= 1" class="w-1/6 p-3 text-left bg-gray-100 font-semibold">
             {{ formatDate(selectedDates[0]) }}
             Sales / Units
             Avg. Selling Price
           </th>
-          <th v-if="selectedDates.length === 2">
+          <th v-if="selectedDates.length === 2" class="w-1/6 p-3 text-left bg-gray-100 font-semibold">
             {{ formatDate(selectedDates[1]) }}
             Sales / Units
             Avg. Selling Price
           </th>
-          <th>SKU Refund Rate<br/>(Last 60 days)</th>
+          <th class="w-1/6 p-3 text-left bg-gray-100 font-semibold">SKU Refund Rate<br/>(Last 60 days)</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in paginatedData" :key="item.sku" class="expandable-row">
-          <td>{{ item.sku }}</td>
-          <td :title="item.productName">{{ item.productName }}</td>
-          <td v-if="selectedDates.length >= 1">
+        <tr v-for="item in paginatedData" :key="item.sku" class="border-b">
+          <td class="p-3">{{ item.sku }}</td>
+          <td class="p-3" :title="item.productName">{{ item.productName }}</td>
+          <td v-if="selectedDates.length >= 1" class="p-3">
             ${{ formatNumber(item.firstDayTotal) }} / {{ item.firstDayUnits }}
             <br/>
             ${{ formatNumber(item.firstDayAvgPrice) }}
           </td>
-          <td v-if="selectedDates.length === 2">
+          <td v-if="selectedDates.length === 2" class="p-3">
             {{ formatSecondSalesUnits(item) }}
             <br/>
             {{ formatSecondDayAvgPrice(item) }}
           </td>
-          <td>{{ formatNumber(item.refundRate) }}%</td>
+          <td class="p-3">{{ formatNumber(item.refundRate) }}%</td>
         </tr>
       </tbody>
     </table>
 
-    <div class="pagination">
+    <div class="flex justify-center items-center gap-5 mt-5">
       <button 
         :disabled="currentPage === 1" 
         @click="changePage(currentPage - 1)"
+        class="px-4 py-2 border border-gray-300 rounded bg-white disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Previous
       </button>
@@ -51,6 +50,7 @@
       <button 
         :disabled="currentPage === totalPages" 
         @click="changePage(currentPage + 1)"
+        class="px-4 py-2 border border-gray-300 rounded bg-white disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Next
       </button>
@@ -75,9 +75,6 @@ export default defineComponent({
     const itemsPerPage = 10
     const searchQuery = ref('')
 
-
-    console.log('props.selectedDates', props.selectedDates)
-    console.log('store.state.table.tableData', store.state.table.tableData.value)
 
 
     const tableData = computed(() => {
@@ -143,7 +140,6 @@ export default defineComponent({
       return `$${formatNumber(item.amount2)} / ${item.qty2}`
     }
 
-
     const formatSecondDayAvgPrice = (item: any) => {
       if (!item.secondDayTotal && !item.secondDayUnits) {
         return '$0.00'
@@ -171,134 +167,9 @@ export default defineComponent({
       formatNumber,
       searchQuery,
       formatDate,
-        formatSecondSalesUnits,
+      formatSecondSalesUnits,
       formatSecondDayAvgPrice,
     }
   }
 })
-</script>
-
-<style scoped>
-.table-container {
-  margin-top: 20px;
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.search-box {
-  margin-bottom: 20px;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 12px 8px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-  vertical-align: top;
-}
-
-th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-  white-space: pre-line;
-}
-
-.expandable-row td {
-  vertical-align: top;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-button {
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-td {
-  white-space: nowrap;
-}
-
-.nan-value {
-  color: #999;
-  font-style: italic;
-}
-
-/* İsteğe bağlı: İkinci sütun için özel stil */
-td:nth-child(4) {
-  color: #666;
-}
-
-/* Product Name sütunu için özel stil */
-td:nth-child(2) {
-  max-width: 400px; /* veya istediğiniz genişlik */
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Diğer sütunlar için nowrap korunacak */
-td:not(:nth-child(2)) {
-  white-space: nowrap;
-}
-
-/* Tablo genişliğini korumak için */
-table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-}
-
-/* Sütun genişliklerini ayarlama */
-th:nth-child(1) { width: 15%; } /* SKU */
-th:nth-child(2) { width: 40%; } /* Product Name */
-th:nth-child(3) { width: 15%; } /* First Date */
-th:nth-child(4) { width: 15%; } /* Second Date */
-th:nth-child(5) { width: 15%; } /* Refund Rate */
-
-/* Opsiyonel: Uzun metinler için hover'da tooltip gösterme */
-td:nth-child(2) {
-  position: relative;
-}
-
-td:nth-child(2):hover::after {
-  content: attr(title);
-  position: absolute;
-  left: 0;
-  top: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 5px;
-  border-radius: 4px;
-  z-index: 1;
-  max-width: 300px;
-  word-wrap: break-word;
-}
-</style> 
+</script> 

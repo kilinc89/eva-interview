@@ -1,6 +1,6 @@
 <template>
   <Transition name="notification">
-    <div v-if="show" :class="['notification', type]">
+    <div v-if="show" :class="['fixed top-5 right-5 p-4 rounded-lg shadow-lg text-white z-50', typeClasses]">
       {{ message }}
     </div>
   </Transition>
@@ -14,43 +14,31 @@ export default defineComponent({
   setup() {
     const store = useStore()
 
+    const typeClasses = computed(() => {
+      switch (store.state.notification.type) {
+        case 'success':
+          return 'bg-green-500';
+        case 'error':
+          return 'bg-red-500';
+        case 'warning':
+          return 'bg-yellow-500';
+        case 'info':
+          return 'bg-blue-500';
+        default:
+          return 'bg-gray-500';
+      }
+    });
+
     return {
       show: computed(() => store.state.notification.show),
       message: computed(() => store.state.notification.message),
-      type: computed(() => store.state.notification.type)
+      typeClasses
     }
   }
 })
 </script>
 
 <style scoped>
-.notification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 15px 20px;
-  border-radius: 4px;
-  color: white;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.success {
-  background-color: #4caf50;
-}
-
-.error {
-  background-color: #f44336;
-}
-
-.warning {
-  background-color: #ff9800;
-}
-
-.info {
-  background-color: #2196f3;
-}
-
 .notification-enter-active,
 .notification-leave-active {
   transition: all 0.3s ease;

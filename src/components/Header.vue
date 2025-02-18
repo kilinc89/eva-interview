@@ -1,7 +1,7 @@
 <template>
-  <div class="header">
-    <h2>Dashboard</h2>
-    <select v-model="localDaySelection" @change="emitChange" class="day-select">
+  <div class="flex justify-between items-center mb-6 p-4 bg-white shadow-md rounded-lg">
+    <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+    <select v-model="localDaySelection" @change="emitChange" class="block w-48 px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
       <option value="60">Last 60 days</option>
       <option value="30">Last 30 days</option>
       <option value="14">Last 14 days</option>
@@ -23,10 +23,9 @@ export default defineComponent({
     const store = useStore()
 
     const emitChange = () => {
-      store.dispatch('chart/fetchDailySalesOverview',localDaySelection.value)
+      store.dispatch('chart/fetchDailySalesOverview', localDaySelection.value)
     }
 
- 
     return {
       localDaySelection,
       emitChange
@@ -36,19 +35,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.day-select {
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  background-color: white;
-  cursor: pointer;
-  min-width: 150px;
-}
+/* Removed custom styles as Tailwind handles styling */
 </style> 

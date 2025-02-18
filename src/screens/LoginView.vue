@@ -1,7 +1,9 @@
 <template>
-  <div class="login-container">
-    <h2>Login</h2>
-    <LoginForm @login="onLogin" />
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Login</h2>
+      <LoginForm @login="onLogin" />
+    </div>
   </div>
 </template>
 
@@ -43,10 +45,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.login-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-}
+/* No additional styles needed as Tailwind handles styling */
 </style>
   

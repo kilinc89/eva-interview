@@ -1,10 +1,9 @@
 <template>
-  <div class="chart-container">
-    <div v-if="!chartData.length" class="loading">
+  <div class="p-6 bg-white shadow-lg rounded-lg">
+    <div v-if="!chartData.length" class="text-center text-gray-500 py-10">
       Loading chart data...
     </div>
     <highcharts class="hc" :options="chartOptions" ref="chart"></highcharts>
-
   </div>
 </template>
 
@@ -121,62 +120,13 @@ export default defineComponent({
       ]
     }));
 
-        return {
-          chartOptions
-        }
-      }
-    })
+    return {
+      chartOptions
+    }
+  }
+})
 </script>
 
 <style scoped>
-.chart-container {
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin: 20px 0;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-}
-
-.legend {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
-  padding-top: 10px;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.color-box {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-}
-
-.color-box.profit {
-  background-color: #00C49F;
-}
-
-.color-box.fba {
-  background-color: #8884d8;
-}
-
-.color-box.fbm {
-  background-color: #483D8B;
-}
-
-h3 {
-  margin-bottom: 20px;
-  color: #333;
-}
+/* Removed custom styles as Tailwind handles styling */
 </style>
