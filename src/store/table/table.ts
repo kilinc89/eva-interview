@@ -104,6 +104,8 @@ const actions = {
           }
         })
 
+        console.log('combinedData', combinedData)
+
         commit('SET_TABLE_DATA', combinedData)
         commit('SET_TOTAL_ITEMS', response.data.Data.item.skuList.length)
       }

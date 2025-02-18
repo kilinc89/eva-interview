@@ -65,6 +65,8 @@ export default defineComponent({
     const totalItems = computed(() => store.state.table.totalItems)
     const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage))
 
+    console.log('tableData 4444', tableData.value)
+
     const paginatedData = computed(() => {
       const start = (currentPage.value - 1) * itemsPerPage
       return tableData.value.slice(start, start + itemsPerPage)
@@ -76,8 +78,8 @@ export default defineComponent({
       store.dispatch('table/fetchDailySalesSkuList', apiPage)
     }
 
-    const formatNumber = (num: number) => {
-      return num.toFixed(2)
+    const formatNumber = (num: number | null) => {
+      return num !== null && num !== undefined ? num.toFixed(2) : '0.00'
     }
 
     watch(() => props.selectedDates, () => {
